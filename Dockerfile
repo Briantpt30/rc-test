@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8080
 
 # Start the application
-CMD ["npm", "install", "&&", "npm", "start"]
+CMD ["sh", "-c", "npm install && npm start"]
