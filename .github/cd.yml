@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    needs: CI Process
     steps:
       - name: Download Docker container from Docker Hub
         run: |
