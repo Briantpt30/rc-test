@@ -17,9 +17,9 @@ jobs:
         with:
           script: |
             const response = await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-              owner: 'owner_username',
-              repo: 'repository_name',
-              workflow_id: 'ci_workflow_id',
+              owner: 'briantpt30',
+              repo: 'rc-test',
+              workflow_id: '85485999',
               ref: 'main'
             });
             console.log(response.status);
@@ -30,13 +30,13 @@ jobs:
         with:
           script: |
             const response = await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-              owner: 'owner_username',
-              repo: 'repository_name',
-              workflow_id: 'cd_workflow_id',
+              owner: 'briantpt30',
+              repo: 'rc-test',
+              workflow_id: '85495914',
               ref: 'main'
             });
             console.log(response.status);
 
       - name: Log CI/CD failure
         if: failure()
-        run: echo "$(date +"%Y-%m-%d %T"): CI/CD failed for repository ${GITHUB_REPOSITORY}" >> ci-cd-log.txt
+          run: echo "$(date +"%Y-%m-%d %T"): CI/CD failed for repository ${GITHUB_REPOSITORY}" >> ci-cd-log.txt
