@@ -39,4 +39,5 @@ jobs:
 
       - name: Log CI/CD failure
         if: failure()
-          run: echo "$(date +"%Y-%m-%d %T"): CI/CD failed for repository ${GITHUB_REPOSITORY}" >> ci-cd-log.txt
+        run: |
+          echo "$(date +"%Y-%m-%d %T"): CI/CD failed for repository ${GITHUB_REPOSITORY}" >> ci-cd-log.txt
