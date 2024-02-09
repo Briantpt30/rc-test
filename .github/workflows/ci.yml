@@ -1,0 +1,27 @@
+name: CI Process
+
+on:
+ workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Build Docker image
+        run: |
+          docker build -t rc-test:latest .
+          docker build -t rc-test:$(git rev-parse --short HEAD) .
+      
+      - name: Publish Docker image to Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push rc-test
+      
