@@ -22,7 +22,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t rc-test:latest .
-          docker build -t $rc-test:$(git rev-parse --short HEAD) .
+          docker build -t rc-test:$(git rev-parse --short HEAD) .
       
       - name: Publish Docker image to Docker Hub
         run: |
