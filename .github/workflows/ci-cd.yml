@@ -12,30 +12,42 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Trigger CI Workflow
-        uses: actions/github-script@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          script: |
-            const response = await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-              owner: 'briantpt30',
-              repo: 'rc-test',
-              workflow_id: '85485999',
-              ref: 'main'
-            });
-            console.log(response.status);
+          node-version: '14'
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/rc-test:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/rc-test:$(git rev-parse --short HEAD) .
+      
+      - name: Publish Docker image to Docker Hub
+        run: |
+          docker logout
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
+
+      - name: Log CI/CD failure
+        if: failure()
+        run: |
+          echo "$(date +"%Y-%m-%d %T"): CI/CD failed for repository ${GITHUB_REPOSITORY}" >> ci-cd-log.txt
+
 
       - name: Trigger CD Workflow
         if: success()
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const response = await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-              owner: 'briantpt30',
-              repo: 'rc-test',
-              workflow_id: '85495914',
-              ref: 'main'
-            });
-            console.log(response.status);
+      - name: Download Docker container from Docker Hub
+        run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
+
+      - name: Stop and remove existing container (if running)
+        run: |
+          docker stop rc-test || true
+          docker rm rc-test || true
+      
+      - name: Run Docker container
+        run: |
+          docker run -d --name rc-test -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
 
       - name: Log CI/CD failure
         if: failure()
