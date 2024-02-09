@@ -21,12 +21,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t briantpt30/rc-test:latest .
-          docker build -t briantpt30/rc-test:$(git rev-parse --short HEAD) .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/rc-test:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/rc-test:$(git rev-parse --short HEAD) .
       
       - name: Publish Docker image to Docker Hub
         run: |
           docker logout
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push briantpt30/rc-test:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
       
