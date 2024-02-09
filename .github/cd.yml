@@ -1,0 +1,23 @@
+name: CD Process
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Download Docker container from Docker Hub
+        run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
+
+      - name: Stop and remove existing container (if running)
+        run: |
+          docker stop rc-test || true
+          docker rm rc-test || true
+      
+      - name: Run Docker container
+        run: |
+          docker run -d --name rc-test -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
