@@ -44,7 +44,7 @@ jobs:
       
       - name: Run Docker container
         run: |
-          docker run -d --name rc-test -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
+          docker run -d --name rc-test -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
 
       - name: Log CI/CD failure
         if: failure()
