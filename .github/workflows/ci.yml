@@ -1,11 +1,15 @@
 name: CI Process
 
 on:
- workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
+    name: build app, docker, deploy
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
