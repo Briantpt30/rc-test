@@ -34,9 +34,8 @@ jobs:
           echo "$(date +"%Y-%m-%d %T"): CI/CD failed for repository ${GITHUB_REPOSITORY}" >> ci-cd-log.txt
 
 
-      - name: Trigger CD Workflow
-        if: success()
       - name: Download Docker container from Docker Hub
+        if: success()
         run: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
 
