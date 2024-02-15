@@ -8,6 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Install runner
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_username: ${{ env.OPENSHIFT_USER }}
+          openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
+
       - name: Install self hosted runner into this repository
         uses: redhat-actions/openshift-actions-runner-installer@v1
         with:
