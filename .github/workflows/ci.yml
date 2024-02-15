@@ -15,9 +15,8 @@ jobs:
         uses: redhat-actions/oc-login@v1
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_username: ${{ secrets.OPENSHIFT_USER }}
-          openshift_password: ${{ secrets.OPENSHIFT_PASSWORD }}
-
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          
       - name: Install self hosted runner into this repository
         uses: redhat-actions/openshift-actions-runner-installer@v1
         with:
