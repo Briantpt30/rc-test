@@ -4,9 +4,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: build app, docker, deploy
+  install-runner:
     runs-on: ubuntu-latest
+    name: Install runner
+    steps:
+      - name: Install self hosted runner into this repository
+        uses: redhat-actions/openshift-actions-runner-installer@v1
+        with:
+          github_pat: ${{ secrets.PAT }}
+          runner_image: 'https://quay.io/repository/redhat-github-actions/buildah-runner'
+
+  self-hosted-workflow:
+    name: Self hosted workflow
+    runs-on: [ self-hosted ]
+    needs: install-runner
 
     steps:
       - name: Checkout repository
