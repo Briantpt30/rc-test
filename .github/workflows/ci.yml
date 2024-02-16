@@ -11,9 +11,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Authenticate
-        run: |
-          oc login -u developer -p developer https://api.crc.testing:6443
+      # - name: Authenticate
+      #   run: |
+      #     oc login -u developer -p developer https://api.crc.testing:6443
 
 
       - name: Install self hosted runner into this repository
