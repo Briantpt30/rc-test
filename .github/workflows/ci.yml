@@ -12,11 +12,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Authenticate
-        uses: redhat-actions/oc-login@v1
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          
+        run: |
+          oc login -u developer -p developer https://api.crc.testing:6443
+
+
       - name: Install self hosted runner into this repository
         uses: redhat-actions/openshift-actions-runner-installer@v1
         with:
