@@ -21,7 +21,7 @@ jobs:
         uses: redhat-actions/openshift-actions-runner-installer@v1
         with:
           github_pat: ${{ secrets.PAT }}
-          runner_image: 'https://quay.io/repository/redhat-github-actions/buildah-runner'
+          runner_image: 'quay.io/repository/redhat-github-actions/buildah-runner'
 
   self-hosted-workflow:
     name: Self hosted workflow
