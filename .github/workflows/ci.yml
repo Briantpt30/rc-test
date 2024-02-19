@@ -32,9 +32,10 @@ jobs:
         uses: redhat-actions/openshift-actions-runner-installer@v1
         with:
           github_pat: ${{ secrets.PAT }}
-          # runner_image: 'quay.io/repository/redhat-github-actions/buildah-runner'
+          runner_image: 'quay.io/repository/redhat-github-actions/buildah-runner'
+          runner_tag: 'latest'
           namespace: 'os-rctest'
-          # helm_extra_args: --set serviceAccountName=buildah-sa
+          helm_extra_args: --set serviceAccountName=buildah-sa
 
   self-hosted-workflow:
     name: Self hosted workflow
@@ -61,3 +62,4 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker push ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
       
+
