@@ -22,6 +22,8 @@ jobs:
         with:
           github_pat: ${{ secrets.PAT }}
           runner_image: 'quay.io/repository/redhat-github-actions/buildah-runner'
+          helm_extra_args:
+            serviceAccountName: buildah-sa
 
   self-hosted-workflow:
     name: Self hosted workflow
