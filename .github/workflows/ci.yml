@@ -61,7 +61,7 @@ jobs:
   self-hosted-workflow:
     name: Self hosted workflow
     runs-on: [ self-hosted ]
-    needs: install-runner
+    # needs: install-runner
 
     steps:
       - name: Checkout repository
