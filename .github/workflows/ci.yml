@@ -22,7 +22,7 @@ jobs:
         with:
           github_pat: ${{ secrets.PAT }}
           runner_image: 'quay.io/repository/redhat-github-actions/buildah-runner'
-          namspace: 'os-rctest'
+          namespace: 'os-rctest'
 
   self-hosted-workflow:
     name: Self hosted workflow
