@@ -4,20 +4,41 @@ on:
   workflow_dispatch:
 
 jobs:
-  # login:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     -
-  #       name: Login to Quay.io
-  #       uses: docker/login-action@v3
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.QUAY_USERNAME }}
-  #         password: ${{ secrets.QUAY_ROBOT_TOKEN }}
+  build:
+      name: Build and push image
+      runs-on: ubuntu-20.04
+
+      steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: my-app
+          tags: latest ${{ github.sha }}
+          containerfiles: |
+            ./containerfile
+
+      # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+      # in which case 'username' and 'password' can be omitted.
+      - name: Push To quay.io
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/briantpt30
+          username: briantpt30
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Print image url
+        run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
 
   install-runner:
     runs-on: ubuntu-latest
     name: Install runner
+    needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -32,8 +53,8 @@ jobs:
         uses: redhat-actions/openshift-actions-runner-installer@v1
         with:
           github_pat: ${{ secrets.PAT }}
-          runner_image: 'quay.io/repository/redhat-github-actions/buildah-runner'
-          runner_tag: 'latest'
+          runner_image: '${{ steps.push-to-quay.outputs.registry-paths }}'
+          # runner_tag: 'latest'
           namespace: 'os-rctest'
           helm_extra_args: --set serviceAccountName=buildah-sa
 
@@ -53,8 +74,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/rc-test:latest .
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/rc-test:$(git rev-parse --short HEAD) .
+          docker build -f ./Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rc-test:latest .
+          docker build -f ./Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rc-test:$(git rev-parse --short HEAD) .
       
       - name: Publish Docker image to Docker Hub
         run: |
