@@ -74,13 +74,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -f ./Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rc-test:latest .
-          docker build -f ./Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rc-test:$(git rev-parse --short HEAD) .
+          podman build -f ./Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rc-test:latest .
+          podman build -f ./Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/rc-test:$(git rev-parse --short HEAD) .
       
       - name: Publish Docker image to Docker Hub
         run: |
-          docker logout
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
+          podman login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          podman push ${{ secrets.DOCKER_USERNAME }}/rc-test:latest
       
 
